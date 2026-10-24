@@ -1,28 +1,24 @@
 <div align="center">
 
-<img src="assets/banner.svg" alt="Neuro-Symbolic Causal Inference Hero Banner" width="100%" />
+![header](https://capsule-render.vercel.app/api?type=waving&color=0:0f2027,50:203a43,100:2c5364&height=220&section=header&text=Neuro-Symbolic%20Causal%20Inference&fontSize=36&fontColor=ffffff&fontAlignY=38&desc=Bridging%20NLP%20%26%20Pearlian%20Bayesian%20Networks%20on%20Corr2Cause&descAlignY=58&descSize=16&animation=fadeIn)
 
-<p align="center">
-  <strong>Bridging Statistical Language Processing &amp; Pearlian Bayesian Networks on the Corr2Cause Benchmark</strong>
-</p>
-
-<p align="center">
+<p>
   <a href="#-quick-start--reproduction-guide"><img src="https://img.shields.io/badge/Python-3.14-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python 3.14" /></a>
-  <a href="#-symbolic-dag-construction--cycle-resolution"><img src="https://img.shields.io/badge/DAG-Acyclic%20Verified-0ea5e9?style=for-the-badge&logo=diagram-project&logoColor=white" alt="DAG Verified" /></a>
-  <a href="#-bayesian-network--do-calculus-inference"><img src="https://img.shields.io/badge/pgmpy-Bayesian%20Net-8b5cf6?style=for-the-badge&logo=scipy&logoColor=white" alt="pgmpy" /></a>
+  <a href="#-symbolic-dag-construction--cycle-resolution"><img src="https://img.shields.io/badge/DAG-Acyclic%20Verified-0ea5e9?style=for-the-badge" alt="DAG Verified" /></a>
+  <a href="#-bayesian-network--do-calculus-inference"><img src="https://img.shields.io/badge/pgmpy-Bayesian%20Net-8b5cf6?style=for-the-badge" alt="pgmpy" /></a>
   <a href="#-relation-extraction-benchmark"><img src="https://img.shields.io/badge/Best%20Macro%20F1-0.5907-10b981?style=for-the-badge" alt="Macro F1" /></a>
   <a href="#-automated-testing--reproducibility"><img src="https://img.shields.io/badge/Tests-30%2F30%20PASS-success?style=for-the-badge&logo=checkmarx&logoColor=white" alt="Tests 30/30" /></a>
   <a href="#-fixed-random-seed"><img src="https://img.shields.io/badge/Seed-42%20Fixed-f59e0b?style=for-the-badge" alt="Seed 42" /></a>
 </p>
 
-<p align="center">
+<p>
   <a href="#-executive-summary">Executive Summary</a> •
-  <a href="#-animated-pipeline-architecture">Pipeline Architecture</a> •
-  <a href="#-the-fundamental-problem-why-nlp-needs-symbolic-causality">The Causal Gap</a> •
-  <a href="#-dataset-deep-dive-corr2cause">Dataset</a> •
-  <a href="#-feature-engineering-mastery-28-dimensions">Features</a> •
+  <a href="#-pipeline-architecture">Pipeline</a> •
+  <a href="#-the-fundamental-problem">The Causal Gap</a> •
+  <a href="#-dataset-corr2cause">Dataset</a> •
+  <a href="#%EF%B8%8F-feature-engineering-28-dimensions">Features</a> •
   <a href="#-relation-extraction-benchmark">Classifiers</a> •
-  <a href="#-symbolic-dag-construction--cycle-resolution">Cycle Resolution</a> •
+  <a href="#%EF%B8%8F-symbolic-dag-construction--cycle-resolution">Cycle Resolution</a> •
   <a href="#-bayesian-network--do-calculus-inference">Do-Calculus</a> •
   <a href="#-quick-start--reproduction-guide">Reproduction</a>
 </p>
@@ -34,49 +30,45 @@
 ## ⚡ Executive Summary
 
 Modern Large Language Models (LLMs) and standard NLP classifiers excel at extracting lexical co-occurrences, but **fundamentally struggle to distinguish correlation from causation**. When tasked with identifying causal directionality from textual premises, statistical NLP models suffer from:
+
 1. **Confounding & Collider Bias:** Inability to separate direct cause from common ancestor or common child effects.
 2. **Structural Inconsistency:** Extracting relations as independent tuples inevitably introduces cyclic dependencies ($A \to B \to C \to A$), violating the physical arrow of time.
 3. **Inability to Reason Under Intervention:** Standard models compute passive conditional probabilities $P(Y \mid X)$, conflating observational association with true interventional effects $P(Y \mid \text{do}(X))$.
 
-This project implements **Phase 1 (Advanced Machine Learning Baseline)** of an end-to-end **Neuro-Symbolic Causal Inference System**. By pairing statistical feature extraction and machine learning classifiers with symbolic graph algorithms and Judea Pearl’s structural Bayesian networks, our pipeline extracts causal triples from natural language, resolves causal feedback loops into a verified **Directed Acyclic Graph (DAG)**, and executes exact interventional queries with `pgmpy`.
+This project implements **Phase 1 (Advanced Machine Learning Baseline)** of an end-to-end **Neuro-Symbolic Causal Inference System**. By pairing statistical feature extraction and machine learning classifiers with symbolic graph algorithms and Judea Pearl's structural Bayesian networks, our pipeline extracts causal triples from natural language, resolves causal feedback loops into a verified **Directed Acyclic Graph (DAG)**, and executes exact interventional queries with `pgmpy`.
 
 ---
 
-## 🔄 Animated Pipeline Architecture
+## 🔄 Pipeline Architecture
 
-The entire project operates as a unified, reproducible 7-stage engine executed via [`masterNotebook.py`](file:///Users/amanbhatnagar/Desktop/aml_dl_project/masterNotebook.py):
-
-<div align="center">
-  <img src="assets/pipeline.svg" alt="Animated End-to-End Pipeline Architecture" width="100%" />
-</div>
-
-### Stage Breakdown
+The entire project operates as a unified, reproducible 7-stage engine executed via [`masterNotebook.py`](masterNotebook.py):
 
 | Stage | Folder | Primary Role | Core Outputs |
 | :--- | :--- | :--- | :--- |
-| **00 Context** | [`00_context/`](file:///Users/amanbhatnagar/Desktop/aml_dl_project/00_context) | Project memory, architecture decisions, and design invariants | [`CONTEXT.md`](file:///Users/amanbhatnagar/Desktop/aml_dl_project/00_context/CONTEXT.md), [`DECISIONS.md`](file:///Users/amanbhatnagar/Desktop/aml_dl_project/00_context/DECISIONS.md) |
-| **01 Literature** | [`01_literatureReview/`](file:///Users/amanbhatnagar/Desktop/aml_dl_project/01_literatureReview) | Formal grounding in Pearl (1988, 2000), d-separation, do-calculus | [`literatureReview.md`](file:///Users/amanbhatnagar/Desktop/aml_dl_project/01_literatureReview/literatureReview.md) |
-| **02 Data Acquisition** | [`02_dataAcquisition/`](file:///Users/amanbhatnagar/Desktop/aml_dl_project/02_dataAcquisition) | Corr2Cause loading, SHA-256 sentence hashing, zero-leakage split audit | `processed/{train,dev,test}.csv` |
-| **03 EDA & Quality** | [`03_edaAndDataQuality/`](file:///Users/amanbhatnagar/Desktop/aml_dl_project/03_edaAndDataQuality) | Label balance, entity mention distributions, text length analytics | 7 distribution plots & quality report |
-| **04 Feature Engineering** | [`04_featureEngineering/`](file:///Users/amanbhatnagar/Desktop/aml_dl_project/04_featureEngineering) | 28 domain-crafted causal, structural, and syntactic feature vectors | `features/{train,dev,test}Features.csv` |
-| **05 Relation Baseline** | [`05_relationExtractionBaseline/`](file:///Users/amanbhatnagar/Desktop/aml_dl_project/05_relationExtractionBaseline) | Rule-based regex vs. LogReg, LinearSVM, Random Forest classifiers | Trained models, confusion matrices, triples |
-| **06 DAG Construction** | [`06_dagConstruction/`](file:///Users/amanbhatnagar/Desktop/aml_dl_project/06_dagConstruction) | Graph assembly, self-loop rejection, cycle detection & greedy pruning | [`causalDAG.png`](file:///Users/amanbhatnagar/Desktop/aml_dl_project/06_dagConstruction/graphs/causalDAG.png), `causalDAG.graphml` |
-| **07 Bayesian Network** | [`07_bayesianNetwork/`](file:///Users/amanbhatnagar/Desktop/aml_dl_project/07_bayesianNetwork) | `pgmpy` DAG compilation, TabularCPDs, variable elimination & do-queries | [`queryResults.md`](file:///Users/amanbhatnagar/Desktop/aml_dl_project/07_bayesianNetwork/results/queryResults.md) |
-| **08 Evaluation** | [`08_evaluation/`](file:///Users/amanbhatnagar/Desktop/aml_dl_project/08_evaluation) | Consolidated multi-metric comparison, error analysis, honest limitations | [`consolidatedResults.csv`](file:///Users/amanbhatnagar/Desktop/aml_dl_project/08_evaluation/consolidatedResults.csv) |
-| **11 Verification** | [`11_docs/`](file:///Users/amanbhatnagar/Desktop/aml_dl_project/11_docs) | 30-assertion automated test harness & viva defense walkthrough | [`runTests.py`](file:///Users/amanbhatnagar/Desktop/aml_dl_project/11_docs/runTests.py) |
+| **00 Context** | [`00_context/`](00_context) | Project memory, architecture decisions, and design invariants | `CONTEXT.md`, `DECISIONS.md` |
+| **01 Literature** | [`01_literatureReview/`](01_literatureReview) | Formal grounding in Pearl (1988, 2000), d-separation, do-calculus | `literatureReview.md` |
+| **02 Data Acquisition** | [`02_dataAcquisition/`](02_dataAcquisition) | Corr2Cause loading, SHA-256 sentence hashing, zero-leakage split audit | `processed/{train,dev,test}.csv` |
+| **03 EDA & Quality** | [`03_edaAndDataQuality/`](03_edaAndDataQuality) | Label balance, entity mention distributions, text length analytics | 7 distribution plots & quality report |
+| **04 Feature Engineering** | [`04_featureEngineering/`](04_featureEngineering) | 28 domain-crafted causal, structural, and syntactic feature vectors | `features/{train,dev,test}Features.csv` |
+| **05 Relation Baseline** | [`05_relationExtractionBaseline/`](05_relationExtractionBaseline) | Rule-based regex vs. LogReg, LinearSVM, Random Forest classifiers | Trained models, confusion matrices, triples |
+| **06 DAG Construction** | [`06_dagConstruction/`](06_dagConstruction) | Graph assembly, self-loop rejection, cycle detection & greedy pruning | `causalDAG.png`, `causalDAG.graphml` |
+| **07 Bayesian Network** | [`07_bayesianNetwork/`](07_bayesianNetwork) | `pgmpy` DAG compilation, TabularCPDs, variable elimination & do-queries | `queryResults.md` |
+| **08 Evaluation** | [`08_evaluation/`](08_evaluation) | Consolidated multi-metric comparison, error analysis, honest limitations | `consolidatedResults.csv` |
+| **11 Verification** | [`11_docs/`](11_docs) | 30-assertion automated test harness & viva defense walkthrough | `runTests.py` |
 
 ---
 
-## 🔬 The Fundamental Problem: Why NLP Needs Symbolic Causality
+## 🔬 The Fundamental Problem
 
 Consider a typical problem from the **Corr2Cause** dataset:
 
-> **Premise:** *In a closed system of 6 variables, variable A is correlated with variable B. Variable B is correlated with variable C. However, when conditioning on variable B, variable A and variable C are independent.*  
+> **Premise:** *In a closed system of 6 variables, variable A is correlated with variable B. Variable B is correlated with variable C. However, when conditioning on variable B, variable A and variable C are independent.*
 > **Hypothesis:** *Variable A directly causes variable C.*
 
 A standard statistical language model focuses on high co-occurrence words (*"correlated"*, *"causes"*), often predicting that the hypothesis is valid. However, Pearl's **d-separation theorem** proves that conditioning on mediator $B$ blocks the path between $A$ and $C$, meaning $A$ cannot be a direct cause of $C$!
 
 ### The Tri-Fold Challenge
+
 ```
 Text Extraction Alone                   Symbolic Bayesian Engine (Our Approach)
 ─────────────────────                   ────────────────────────────────────────
@@ -88,7 +80,7 @@ Text Extraction Alone                   Symbolic Bayesian Engine (Our Approach)
 
 ---
 
-## 📊 Dataset Deep-Dive: Corr2Cause
+## 📊 Dataset: Corr2Cause
 
 The pipeline operates on the official **Corr2Cause** benchmark (`causalnlp/corr2cause`), designed to test whether models can perform pure causal deduction from statistical premises.
 
@@ -115,7 +107,7 @@ The dataset tests 6 distinct causal graph templates across systems of 2 to 6 var
 </div>
 
 <details>
-<summary><strong>🔍 Click to view Template Definitions &amp; Reasoning Patterns</strong></summary>
+<summary><strong>🔍 Click to view Template Definitions & Reasoning Patterns</strong></summary>
 
 1. **`parent`**: $X \to Y$ (Direct parent-child link).
 2. **`child`**: $Y \to X$ (Direct reverse child-parent relationship).
@@ -128,7 +120,7 @@ The dataset tests 6 distinct causal graph templates across systems of 2 to 6 var
 
 ---
 
-## 🛠️ Feature Engineering Mastery (28 Dimensions)
+## 🛠️ Feature Engineering (28 Dimensions)
 
 Rather than treating text as a bag-of-words, we engineered **28 domain-specific features** capturing causal syntax, graph density, and hypothesis structure. **All encoders and scalers are fitted exclusively on the training split** to guarantee zero data leakage.
 
@@ -146,10 +138,6 @@ Rather than treating text as a bag-of-words, we engineered **28 domain-specific 
 ## 🏆 Relation Extraction Benchmark
 
 We systematically evaluated **4 distinct relation extraction architectures** on the hold-out test set ($N=1,162$). All hyperparameters were tuned exclusively via 3-fold cross-validation on the development set.
-
-<div align="center">
-  <img src="assets/benchmark_comparison.svg" alt="Animated Model Benchmark Comparison" width="100%" />
-</div>
 
 ### Detailed Performance Matrix
 
@@ -179,10 +167,6 @@ When candidate causal triples $(X, \text{relation}, Y)$ are extracted from multi
 
 Cycles represent an impossible causal paradox: $A \to B \to C \to A$ implies an event causes itself backward in time.
 
-<div align="center">
-  <img src="assets/cycle_resolution.svg" alt="Animated Cycle Resolution Diagram" width="100%" />
-</div>
-
 ### Confidence-Guided Greedy Pruning Algorithm
 
 To enforce acyclicity without discarding high-confidence knowledge, we developed an iterative pruning algorithm:
@@ -191,7 +175,7 @@ $$\text{arg min}_{e \in \text{Cycle}_i} \;\; \text{Confidence}(e)$$
 
 1. **Cycle Detection:** Utilize Tarjan's or Johnson's elementary cycle algorithm on directed graph $G = (V, E)$.
 2. **Confidence Ranking:** For each discovered cycle, identify the edge with the minimum extraction confidence score.
-3. **Surgical Removal:** Remove the lowest-confidence edge and log the decision into [`cycleResolutionReport.md`](file:///Users/amanbhatnagar/Desktop/aml_dl_project/06_dagConstruction/cycleResolutionReport.md).
+3. **Surgical Removal:** Remove the lowest-confidence edge and log the decision into [`cycleResolutionReport.md`](06_dagConstruction/cycleResolutionReport.md).
 4. **Iterate:** Repeat until `nx.is_directed_acyclic_graph(G) == True`.
 
 ```
@@ -211,10 +195,6 @@ After Surgical Pruning    6        15        0      ✅ Verified Pearlian DAG
 ## 🎲 Bayesian Network & Do-Calculus Inference
 
 Once the verified DAG is established, it is compiled into a formal probabilistic graphical model using **`pgmpy`**. Conditional Probability Distributions (CPDs) are parameterized using informative Dirichlet priors reflecting the domain constraints.
-
-<div align="center">
-  <img src="assets/do_calculus.svg" alt="Animated Pearl Do-Calculus Surgery" width="100%" />
-</div>
 
 ### Validated Causal Query Experiments
 
@@ -237,7 +217,7 @@ Using `pgmpy.inference.VariableElimination`, we evaluated both **observational c
 
 ## 🧪 Automated Testing & Reproducibility
 
-The repository includes a comprehensive 30-assertion automated test suite in [`11_docs/runTests.py`](file:///Users/amanbhatnagar/Desktop/aml_dl_project/11_docs/runTests.py) covering data leakage, graph topology, edge provenance, and inference validity.
+The repository includes a comprehensive 30-assertion automated test suite in [`11_docs/runTests.py`](11_docs/runTests.py) covering data leakage, graph topology, edge provenance, and inference validity.
 
 ```bash
 $ ./venv/bin/python 11_docs/runTests.py
@@ -335,16 +315,10 @@ python 11_docs/runTests.py
 
 ---
 
-## 📂 Repository Directory Map
+## 📂 Repository Structure
 
 ```
 aml_dl_project/
-├── assets/                          # Animated vector SVG diagrams & badges
-│   ├── banner.svg                   # Hero banner with pulsing causal nodes
-│   ├── pipeline.svg                 # End-to-end 7-stage animated architecture
-│   ├── cycle_resolution.svg         # Animated cycle detection & surgical pruning
-│   ├── do_calculus.svg              # Pearl graph surgery & probability gauges
-│   └── benchmark_comparison.svg     # Animated classification benchmark chart
 ├── 00_context/                      # Persistent project memory & decision logs
 │   ├── CONTEXT.md                   # Chronological development trajectory
 │   └── DECISIONS.md                 # Architectural design justifications
@@ -390,7 +364,7 @@ aml_dl_project/
 While this AML Phase 1 baseline proves that neuro-symbolic coupling prevents cyclic paradoxes and enables Pearlian do-calculus, several challenges remain:
 
 1. **Synthetic Vocabulary:** Corr2Cause relies on abstract variable tokens ($A, B, C \dots$). Real scientific literature features polysemous biomedical and economic entities.
-2. **Decoupled Extraction:** In Phase 1, edge classification is isolated from graph construction. 
+2. **Decoupled Extraction:** In Phase 1, edge classification is isolated from graph construction.
 3. **Phase 2 (Deep Learning) Roadmap:**
    - **Pre-trained Causal Transformers:** Fine-tuning **DistilBERT / RoBERTa** to learn contextual representations of conditional independence clauses directly.
    - **Differentiable DAG Learning:** Integrating **Graph Neural Networks (GNNs)** with continuous acyclicity constraints (e.g., NOTEARS / DAG-GNN) to learn structure end-to-end.
@@ -409,5 +383,9 @@ While this AML Phase 1 baseline proves that neuro-symbolic coupling prevents cyc
 ---
 
 <div align="center">
-  <sub>CSAI Advanced Machine Learning &amp; Deep Learning Project • Phase 1 Baseline • Built with Python, NetworkX, pgmpy &amp; scikit-learn</sub>
+
+![footer](https://capsule-render.vercel.app/api?type=waving&color=0:2c5364,50:203a43,100:0f2027&height=120&section=footer)
+
+<sub>CSAI Advanced Machine Learning & Deep Learning Project • Phase 1 Baseline • Built with Python, NetworkX, pgmpy & scikit-learn</sub>
+
 </div>
