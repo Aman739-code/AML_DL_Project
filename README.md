@@ -1,83 +1,95 @@
-# Neuro-Symbolic Causal Inference via Language Model Knowledge Extraction and Bayesian Networks
+<p align="center">
+  <img src="assets/banner.svg" alt="Neuro-Symbolic Causal Inference" width="100%"/>
+</p>
 
-## Phase 1: Advanced Machine Learning (AML) Baseline
+<p align="center">
+  <img src="https://img.shields.io/badge/python-3.12-3776AB?logo=python&logoColor=white" alt="python"/>
+  <img src="https://img.shields.io/badge/scikit--learn-baselines-F7931E?logo=scikitlearn&logoColor=white" alt="sklearn"/>
+  <img src="https://img.shields.io/badge/pgmpy-Bayesian%20Network-6c5ce7" alt="pgmpy"/>
+  <img src="https://img.shields.io/badge/networkx-DAG-0d9488" alt="networkx"/>
+  <img src="https://img.shields.io/badge/dataset-Corr2Cause-e11d48" alt="dataset"/>
+  <img src="https://img.shields.io/badge/phase-1%20(ML%20part)-2563eb" alt="phase"/>
+</p>
 
-This repository contains the Phase 1 (ML-only) implementation of Project 1 for the CSAI course. The project extracts causal relations from the Corr2Cause dataset using traditional ML techniques, constructs a directed acyclic graph (DAG), and fits a Bayesian network for causal inference.
+> **Idea in one line:** read causal claims out of text, assemble them into a directed acyclic graph, turn the graph into a Bayesian network, and ask it interventional questions such as `P(B | do(E = high))`.
 
-## Repository Structure
+---
 
+## Pipeline
+
+<p align="center">
+  <img src="assets/pipeline.svg" alt="Pipeline stages 02 to 08" width="100%"/>
+</p>
+
+```mermaid
+flowchart LR
+    A[Corr2Cause CSVs] --> B[Load and verify splits]
+    B --> C[EDA and data quality]
+    C --> D[Feature engineering]
+    D --> E[Rule-based + LR / SVM / RF]
+    E --> F[Extracted causal triples]
+    F --> G[Build DAG and break cycles]
+    G --> H[Bayesian network - pgmpy]
+    H --> I[Queries: observe vs do]
+    E --> J[Evaluation]
+    I --> J
 ```
-.
-├── 00_context/              # Context log and decisions log (persistent memory)
-├── 01_literatureReview/     # Literature review grounded in Pearl (1988) and Devlin et al. (2019)
-├── 02_dataAcquisition/      # Data loading and split verification
-├── 03_edaAndDataQuality/    # Exploratory data analysis and quality checks
-├── 04_featureEngineering/   # Feature extraction (dependency patterns, NER, cue words)
-├── 05_relationExtractionBaseline/  # Rule-based and ML relation classifiers
-├── 06_dagConstruction/      # DAG construction with cycle resolution
-├── 07_bayesianNetwork/      # Bayesian network fitting and causal queries
-├── 08_evaluation/           # Consolidated evaluation metrics and analysis
-├── 09_report/               # IEEE-format LaTeX report
-├── 10_presentation/         # Slide outline with talking points
-├── 11_docs/                 # How-to-run guide, tests, and viva preparation
-├── screenshots/             # Screenshots organized by stage
-├── corr2cause/              # Raw dataset (Corr2Cause from Hugging Face)
-├── src/                     # Shared helper modules (config, seeds, paths)
-├── masterNotebook.py        # Master script that runs all stages end-to-end
-├── requirements.txt         # Pinned Python dependencies
-└── README.md                # This file
-```
 
-## Quick Start
+## Results
+
+<p align="center">
+  <img src="assets/results.svg" alt="Test macro-F1 by model" width="100%"/>
+</p>
+
+| Model | Test accuracy | Test macro-F1 |
+|---|---|---|
+| Predict all-0 (reference) | 0.845 | 0.458 |
+| Rule-based | 0.818 | 0.472 |
+| Logistic Regression | 0.680 | 0.584 |
+| Random Forest | 0.682 | 0.583 |
+| **Linear SVM** | 0.681 | **0.591** |
+
+The test set is 84.5% label 0, so accuracy is misleading and **macro-F1** is the metric to read.
+
+## Quick start
 
 ```bash
-# 1. Create and activate virtual environment
-python3 -m venv venv
-source venv/bin/activate
-
-# 2. Install dependencies
+python -m venv venv && source venv/bin/activate
 pip install -r requirements.txt
-python -m spacy download en_core_web_sm
 
-# 3. Run the master notebook end-to-end
-python masterNotebook.py
-
-# 4. Run the automated test suite
-python 11_docs/runTests.py
+python masterNotebook.py      # runs stages 02-08 end to end (SEED = 42)
+python runTests.py            # automated checks
 ```
 
-## Dataset
+## Repository map
 
-- **Corr2Cause** (causalnlp/corr2cause): A dataset for evaluating whether LLMs can distinguish correlation from causation
-- Binary classification: label 0 (invalid causal claim) vs label 1 (valid causal claim)
-- 6 template types covering different causal reasoning patterns
-- Official train/dev/test splits
+<details>
+<summary><b>Click to expand</b></summary>
 
-## Pipeline Overview
+| Folder | What it does |
+|---|---|
+| `00_context/` | Project context and design decisions |
+| `02_dataAcquisition/` | Loads Corr2Cause, builds `processed/` splits, verifies them |
+| `03_edaAndDataQuality/` | Label balance, length stats, plots, quality summary |
+| `04_featureEngineering/` | `extractFeatures.py` and the feature dictionary |
+| `05_relationExtractionBaseline/` | Rule-based classifier, LR / SVM / RF, triple extraction |
+| `06_dagConstruction/` | Triples to NetworkX graph, cycle detection and removal |
+| `07_bayesianNetwork/` | pgmpy network, observational vs `do()` queries |
+| `08_evaluation/` | Consolidated results and limitations |
+| `09_report/` | LaTeX report |
+| `10_presentation/` | Slide outline |
+| `11_docs/` | Codebase explanation, how to run, viva preparation |
 
-1. **Data Acquisition** → Load and verify Corr2Cause splits (no document leakage)
-2. **EDA & Quality** → Label imbalance, text analysis, duplicate checks
-3. **Feature Engineering** → Structural, cue word, and relation pattern features
-4. **Relation Extraction** → Rule-based + 3 ML classifiers (fair comparison)
-5. **DAG Construction** → Graph building, cycle detection and resolution
-6. **Bayesian Network** → pgmpy BN with intervention and conditional queries
-7. **Evaluation** → Consolidated metrics, plots, honest limitations
+</details>
 
-## Fixed Random Seed
+## Known limitations (read before citing numbers)
 
-All experiments use **SEED = 42** for full reproducibility.
+- **CPDs are hand-set priors**, not learned from data, because the corpus has no observational samples. Query results show the mechanics of `P(Y | X)` versus `P(Y | do(X))`; they are not empirical causal estimates.
+- **Triples carry a constant confidence of 1.0**, so cycle removal falls back to an arbitrary tie-break.
+- **Claims from independent examples are merged into one graph** over the letters A to F, which have different meanings in every example.
+- **Hyperparameters are tuned with 3-fold CV on the training split**; the dev split is not used for tuning.
+- Several engineered columns are constant, and the `parent` and `child` hypothesis types are merged.
 
-## Documentation
+---
 
-- **How to Run**: See [`11_docs/HOW_TO_RUN_AND_TEST.md`](11_docs/HOW_TO_RUN_AND_TEST.md)
-- **Tests**: Run `python 11_docs/runTests.py`
-- **Viva Prep**: See [`11_docs/vivaPreparation.md`](11_docs/vivaPreparation.md)
-- **Decisions Log**: See [`00_context/DECISIONS.md`](00_context/DECISIONS.md)
-
-## Team
-
-*Individual contributions to be filled by team members.*
-
-## License
-
-Academic use only — CSAI course project.
+<p align="center"><sub>Advanced Machine Learning · Phase 1 · Seed 42</sub></p>
