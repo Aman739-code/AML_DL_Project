@@ -1,6 +1,8 @@
 <div align="center">
 
-![header](https://capsule-render.vercel.app/api?type=waving&color=0:0f2027,50:203a43,100:2c5364&height=220&section=header&text=Neuro-Symbolic%20Causal%20Inference&fontSize=36&fontColor=ffffff&fontAlignY=38&desc=Bridging%20NLP%20%26%20Pearlian%20Bayesian%20Networks%20on%20Corr2Cause&descAlignY=58&descSize=16)
+![header](https://capsule-render.vercel.app/api?type=waving&color=0:2c5364,50:203a43,100:0f2027&height=200&section=header&text=Neuro-Symbolic%20Causal%20Inference&fontSize=40&fontColor=ffffff)
+
+### Bridging NLP and Pearlian Bayesian Networks on Corr2Cause
 
 **Extract causal claims from text → build a verified DAG → answer `do()` queries exactly.**
 
